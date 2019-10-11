@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salesianostriana.dam.rest.dto.MonumentoDto;
 import com.salesianostriana.dam.rest.dto.conversores.MonumentoDtoConverter;
+import com.salesianostriana.dam.rest.excepciones.MonumentoNotFoundException;
 import com.salesianostriana.dam.rest.modelo.Monumento;
 import com.salesianostriana.dam.rest.repos.MonumentoRepository;
 
@@ -60,7 +61,8 @@ public class MonumentoController {
 		Long theId = id.orElse(-1L);
 		Monumento monumento = monumentoRepository.findById(theId).orElse(null);
 		if(monumento==null) {
-			return ResponseEntity.notFound().build();
+			//return ResponseEntity.notFound().build();
+			throw new MonumentoNotFoundException(theId);
 		}else {
 			return ResponseEntity.ok(monumento);
 		}
