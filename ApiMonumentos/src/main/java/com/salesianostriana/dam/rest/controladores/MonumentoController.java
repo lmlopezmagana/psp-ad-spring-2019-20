@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.salesianostriana.dam.rest.dto.MonumentoDto;
 import com.salesianostriana.dam.rest.dto.conversores.MonumentoDtoConverter;
@@ -57,15 +58,21 @@ public class MonumentoController {
 	
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> unMonumento (@PathVariable Optional<Long> id) {
+	public Monumento unMonumento (@PathVariable Optional<Long> id) {
 		Long theId = id.orElse(-1L);
-		Monumento monumento = monumentoRepository.findById(theId).orElse(null);
-		if(monumento==null) {
-			//return ResponseEntity.notFound().build();
-			throw new MonumentoNotFoundException(theId);
-		}else {
-			return ResponseEntity.ok(monumento);
-		}
+//		Monumento monumento = monumentoRepository.findById(theId).orElse(null);
+//		if(monumento==null) {
+//			//return ResponseEntity.notFound().build();
+//			throw new MonumentoNotFoundException(theId);
+//		}else {
+//			return ResponseEntity.ok(monumento);
+//		}
+		
+		return monumentoRepository.findById(theId)
+				.orElseThrow(() -> 
+					new MonumentoNotFoundException(theId));
+		
+		
 	}
 	
 	
