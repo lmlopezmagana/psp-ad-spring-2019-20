@@ -34,4 +34,8 @@ public class LineaVenta {
 	@JoinColumn(name = "venta_id")
 	private Venta venta;
 	
+	public float getSubTotal() {
+		return precioUnitario * cantidad;
+	}
+	
 }

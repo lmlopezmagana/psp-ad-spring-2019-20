@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ import lombok.ToString;
 
 @Entity
 @Data @EqualsAndHashCode(exclude="lineasDeVenta") @ToString(exclude="lineasDeVenta")
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor @Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Venta {
 	
@@ -36,6 +37,7 @@ public class Venta {
 	
 	private String cliente;
 	
+	@Builder.Default
 	@JsonManagedReference
 	@OneToMany(mappedBy="venta", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<LineaVenta> lineasDeVenta = new HashSet<>();
@@ -53,6 +55,12 @@ public class Venta {
 	public void removeLineaVenat(LineaVenta lv) {
 		lineasDeVenta.remove(lv);
 		lv.setVenta(null);
+	}
+	
+	public float getTotal() {
+		return (float) lineasDeVenta.stream()
+			.mapToDouble(LineaVenta::getSubTotal)
+			.sum();
 	}
 
 }
