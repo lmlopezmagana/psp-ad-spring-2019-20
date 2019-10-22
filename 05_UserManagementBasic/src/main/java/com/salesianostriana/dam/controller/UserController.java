@@ -2,9 +2,7 @@ package com.salesianostriana.dam.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +26,8 @@ public class UserController {
 	private final UserDtoConverter userDtoConverter;
 	
 	@GetMapping("/me")
-	public Authentication me(@AuthenticationPrincipal Authentication authentication) {
-		return authentication;
+	public UserDto me(@AuthenticationPrincipal UserEntity user) {
+		return userDtoConverter.convertUserEntityToUserDto(user);
 	}
 	
 	
