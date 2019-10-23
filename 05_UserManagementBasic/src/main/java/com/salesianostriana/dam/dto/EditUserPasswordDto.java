@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
-@Builder
-public class CreateUserDto {
+public class EditUserPasswordDto {
 
-	private String username;
-	private String password;
-	private String password2;
-	private String avatar;
+	private String actualPassword;
+	private String newPassword;
+	private String newPassword2;
 	
 	
 }

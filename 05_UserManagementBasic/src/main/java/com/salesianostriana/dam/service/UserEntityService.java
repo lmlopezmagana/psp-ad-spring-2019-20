@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.salesianostriana.dam.dto.CreateUserDto;
+import com.salesianostriana.dam.dto.EditUserPasswordDto;
 import com.salesianostriana.dam.error.RegisterNewUserException;
 import com.salesianostriana.dam.error.UserNotFoundException;
 import com.salesianostriana.dam.model.UserEntity;
@@ -45,6 +46,29 @@ public class UserEntityService extends BaseService<UserEntity, Long, UserEntityR
 								.build();
 		
 		return this.repositorio.save(newUser);
+	}
+	
+	public UserEntity editUser(EditUserPasswordDto editUserDto, Long userId) {
+		
+			UserEntity theUser = findById(userId).orElseThrow(()-> new UserNotFoundException());
+			
+			// Comprobamos si la contraseña actual coincide
+			if (!passwordEncoder.matches(editUserDto.getActualPassword(), theUser.getPassword())) {
+				throw new RegisterNewUserException("La contraseña no es correcta");
+			}
+			
+			// Si las contraseñas están vacías o no son iguales
+			if (editUserDto.getNewPassword().isEmpty() || editUserDto.getNewPassword2().isEmpty())
+				throw new RegisterNewUserException("La contraseña no cumple con la política de seguridad");
+			
+					
+			if (!editUserDto.getNewPassword2().equals(editUserDto.getNewPassword2())) 
+				throw new RegisterNewUserException("Las contraseñas no coinciden");
+		
+			theUser.setPassword(passwordEncoder.encode(editUserDto.getNewPassword()));
+
+			return save(theUser);
+		
 	}
 
 }
